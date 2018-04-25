@@ -1,12 +1,13 @@
 ---
 config:
-  name: demo
+  name: spring-boot-crud-demo
   info: Spring boot jdbc demo app
 
 spring:
   application:
-    name: hello-bpm
-
+    name: spring-boot-crud-demo
+  resources:
+    static-locations: classpath:/
 
 #
 # 'cloud' profile

@@ -12,7 +12,7 @@ public interface IArticleService {
 
 	boolean addArticle(Article article);
 
-	void updateArticle(Article article);
+	int updateArticle(Article article);
 
-	void deleteArticle(int articleId);
+	int deleteArticle(int articleId);
 }

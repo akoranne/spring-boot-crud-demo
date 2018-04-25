@@ -26,21 +26,20 @@ public class ArticleService implements IArticleService {
 
 	@Override
 	public synchronized boolean addArticle(Article article) {
-		if (articleRepository.isExists(article.getTitle(), article.getCategory())) {
-			return false;
-		} else {
-			articleRepository.addArticle(article);
-			return true;
+		boolean isExists = articleRepository.isExists(article.getTitle(), article.getCategory());
+		if (! isExists) {
+			int id = articleRepository.addArticle(article);
 		}
+		return isExists;
 	}
 
 	@Override
-	public void updateArticle(Article article) {
-		articleRepository.updateArticle(article);
+	public int updateArticle(Article article) {
+		return articleRepository.updateArticle(article);
 	}
 
 	@Override
-	public void deleteArticle(int articleId) {
-		articleRepository.deleteArticle(articleId);
+	public int deleteArticle(int articleId) {
+		return articleRepository.deleteArticle(articleId);
 	}
 }
