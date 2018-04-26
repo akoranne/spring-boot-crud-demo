@@ -12,3 +12,8 @@ spring:
   jpa:
     show-sql: true
     generate-ddl: false
+
+security:
+  basic:
+    enabled: false
+  enable-csrf: true

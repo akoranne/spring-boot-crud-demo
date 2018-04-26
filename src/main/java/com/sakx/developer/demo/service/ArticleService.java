@@ -1,44 +1,44 @@
 package com.sakx.developer.demo.service;
 
-import com.sakx.developer.demo.repository.ArticleRepository;
-import com.sakx.developer.demo.model.Article;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.sakx.developer.demo.model.Article;
+import com.sakx.developer.demo.repository.ArticleRepository;
 
 @Service
-public class ArticleService implements IArticleService {
+public class ArticleService {
 
 	@Autowired
 	private ArticleRepository articleRepository;
 
-	@Override
+	public String getInfo() {
+		return "Article service";
+	}
+	
 	public Article getArticleById(int articleId) {
 		Article obj = articleRepository.getArticleById(articleId);
 		return obj;
 	}
 
-	@Override
 	public List<Article> getAllArticles() {
 		return articleRepository.getAllArticles();
 	}
 
-	@Override
 	public synchronized boolean addArticle(Article article) {
 		boolean isExists = articleRepository.isExists(article.getTitle(), article.getCategory());
 		if (! isExists) {
-			int id = articleRepository.addArticle(article);
+			articleRepository.addArticle(article);
 		}
 		return isExists;
 	}
 
-	@Override
 	public int updateArticle(Article article) {
 		return articleRepository.updateArticle(article);
 	}
 
-	@Override
 	public int deleteArticle(int articleId) {
 		return articleRepository.deleteArticle(articleId);
 	}

@@ -17,6 +17,8 @@ import java.io.Serializable;
 @Builder
 public class Article implements Serializable{
 
+	private static final long serialVersionUID = -3970822026879214094L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "article_id", updatable = false, nullable = false)
