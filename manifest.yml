@@ -4,3 +4,6 @@ applications:
   path: target/spring-boot-crud-demo-0.0.1-SNAPSHOT.jar
   memory: 800M
   instances: 1
+  services:
+    - config
+    - mysql
