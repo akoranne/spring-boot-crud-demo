@@ -19,10 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
+import static org.assertj.core.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -59,9 +56,7 @@ public class ArticleRepositoryTests {
 		List<Article> results = repository.getAllArticles();
 		logger.debug(results.size() + ">>>" + results);
 		logger.debug(tname.getMethodName() + " " + results);
-
 		logger.info(" returned results - \n {}", results);
-
 		Assert.assertTrue("returned no of rows is incorrect", (results.size() == 4));
 	}
 
@@ -70,8 +65,8 @@ public class ArticleRepositoryTests {
 		int id1 = repository.addArticle(new Article(-1, "The Phoenix Project", "Management"));
 		int id2 = repository.addArticle(new Article(-1, "The JHipster Mini Book", "Frontend"));
 
-		assertThat(id1, is(notNullValue()));
-		assertThat(id2, is(notNullValue()));
+        assertThat(id1).isNotNull();
+        assertThat(id2).isNotNull();
 
 		List<Article> results = repository.getAllArticles();
 		logger.debug(results.size() + ">>>" + results);
@@ -89,20 +84,23 @@ public class ArticleRepositoryTests {
 		int id1 = repository.addArticle(phoenixProject);
 		
 		// verify the article id 
-		assertThat(id1, is(notNullValue()));
+        assertThat(id1).isNotNull();
 
 		//retrieve the article by id
 		Article article = repository.getArticleById(id1);
 		System.out.println("returned article for id - " + id1 + " ==> " + article);
-		assertThat(article.getArticleId(), is(article.getArticleId()));
-        assertThat(article,is(phoenixProject));
+		assertThat(article.getArticleId())
+                .isEqualTo(article.getArticleId());
+        assertThat(article)
+                .isEqualToComparingFieldByField(phoenixProject);
 
 		jhipster.setArticleId(id1);
 		int updCnt = repository.updateArticle(jhipster);
-		assertThat(updCnt, is(notNullValue()));
+        assertThat(updCnt).isNotNull();
 
 		Article article2 = repository.getArticleById(id1);
-        assertThat(article2,is(jhipster));
+        assertThat(article2)
+                .isEqualToComparingFieldByField(jhipster);
 		
 	}
 
@@ -119,13 +117,13 @@ public class ArticleRepositoryTests {
         //retrieve the article by id
         Article article = repository.getArticleById(id1);
         System.out.println("returned article for id - " + id1 + " ==> " + article);
-        assertThat(article, is(notNullValue()));
+        assertThat(article).isNotNull();
 
         int delCnt = repository.deleteArticle(id1);
-        assertThat(delCnt, is(1));
+        assertThat(delCnt).isEqualTo(1);
 
         Article article2 = repository.getArticleById(id1);
-        assertThat(article2, is(nullValue()));
+        assertThat(article2).isNotNull();
 
         results = repository.getAllArticles();
         Assert.assertTrue("returned no of rows is incorrect", (results.size() == 3));

@@ -52,7 +52,8 @@ public class ArticleRestController {
 	}
 
 	@RequestMapping(value = "/articles/add", method = RequestMethod.POST)
-	public ResponseEntity<String> addArticle(@RequestBody Article article, UriComponentsBuilder builder) {
+	public ResponseEntity<String> addArticle(@RequestBody Article article) {
+	// public ResponseEntity<String> addArticle(@RequestBody Article article, UriComponentsBuilder builder) {
 
 		ResponseEntity<String> response = null;
 

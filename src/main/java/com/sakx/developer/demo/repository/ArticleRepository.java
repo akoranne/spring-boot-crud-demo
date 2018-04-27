@@ -29,6 +29,19 @@ public class ArticleRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	public List<Article> getAllArticles() {
+		String sql = "SELECT article_id, title, category FROM articles";
+		RowMapper<Article> rowMapper = new ArticleRowMapper();
+		List<Article> articles = jdbcTemplate.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(sql);
+				return ps;
+			}
+		}, rowMapper);
+		return articles;
+	}
+
 	public Article getArticleById(int articleId) {
 		String sql = "SELECT article_id, title, category FROM articles WHERE article_id = ?";
 		RowMapper<Article> rowMapper = new BeanPropertyRowMapper<Article>(Article.class);
@@ -44,22 +57,25 @@ public class ArticleRepository {
 		return (articles != null && articles.isEmpty() == false ? articles.get(0) : null);
 	}
 
-	public List<Article> getAllArticles() {
-		String sql = "SELECT article_id, title, category FROM articles";
-		RowMapper<Article> rowMapper = new ArticleRowMapper();
+	public List<Article> getArticleByTitleAndCategory(String title, String category) {
+		String sql = "SELECT * FROM articles WHERE title = ? and category=?";
+		RowMapper<Article> rowMapper = new BeanPropertyRowMapper<Article>(Article.class);
 		List<Article> articles = jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				final PreparedStatement ps = connection.prepareStatement(sql);
+				int idx = 0;
+				ps.setString(++idx, title);
+				ps.setString(++idx, category);
 				return ps;
 			}
 		}, rowMapper);
 		return articles;
 	}
 
-	public int addArticle(Article article) {
 
-		//Add article
+    //Add article
+	public int addArticle(Article article) {
 		String sqlInsert = "INSERT INTO articles (title, category) values (?, ?)";
 		KeyHolder key = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -112,21 +128,11 @@ public class ArticleRepository {
 	}
 
 	public boolean isExists(String title, String category) {
-		String sql = "SELECT count(*) FROM articles WHERE title = ? and category=?";
-		int rowcnt = jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(sql);
-				int idx = 0;
-				ps.setString(++idx, title);
-				ps.setString(++idx, category);
-				return ps;
-			}
-		});
-		if (rowcnt == 0) {
-			return false;
-		} else {
-			return true;
+		boolean isExists = true;
+		List<Article> articles =getArticleByTitleAndCategory(title, category);
+		if (articles == null || articles.isEmpty()) {
+			isExists = false;
 		}
+		return isExists;
 	}
 }

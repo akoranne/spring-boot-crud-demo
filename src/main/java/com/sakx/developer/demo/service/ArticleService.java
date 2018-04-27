@@ -27,12 +27,13 @@ public class ArticleService {
 		return articleRepository.getAllArticles();
 	}
 
+	// public synchronized boolean addArticle(Article article) {
 	public synchronized boolean addArticle(Article article) {
-		boolean isExists = articleRepository.isExists(article.getTitle(), article.getCategory());
-		if (! isExists) {
-			articleRepository.addArticle(article);
+	    boolean isAdded = false;
+		if (! articleRepository.isExists(article.getTitle(), article.getCategory()) ) {
+			if (articleRepository.addArticle(article) > 0 ) isAdded = true;
 		}
-		return isExists;
+		return isAdded;
 	}
 
 	public int updateArticle(Article article) {

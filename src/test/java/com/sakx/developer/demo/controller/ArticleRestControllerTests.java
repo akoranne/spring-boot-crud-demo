@@ -1,24 +1,29 @@
 package com.sakx.developer.demo.controller;
 
 import com.sakx.developer.demo.Application;
+import com.sakx.developer.demo.model.Article;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.Collection;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -28,69 +33,99 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ArticleRestControllerTests {
 
 	public static final Logger logger = LoggerFactory.getLogger(ArticleRestControllerTests.class);
-	
-	@Autowired
+
+    @LocalServerPort
+    private int port;
+
+    @Autowired
     private MockMvc mockMvc;
- 
-    // @MockBean
-    // private ArticleService service;
- 
-    // write test cases here
+
+	@Autowired
+    private TestRestTemplate restTemplate;
+
+    private HttpHeaders headers = new HttpHeaders();
 
     @Test
     public void shouldReturnDefaultMessage() throws Exception {
-    	// Mockito.when(service.getInfo()).thenReturn("Article service");
-    	
-        this.mockMvc
-                .perform(get("/"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Article service")));
+        assertThat(restTemplate.getForObject(createURLWithPort("/"), String.class))
+                .contains("Article service");
+    }
+
+    @Test
+    public void shouldReturnArticleForId() throws Exception {
+        String expected = "{\"articleId\":1,\"title\":\"Spring REST Security using Hibernate\",\"category\":\"Spring\"}";
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<Article> response =
+                restTemplate.exchange(createURLWithPort("/articles/show/1"),
+                        HttpMethod.GET,
+                        (new HttpEntity<String>(null, headers)), Article.class);
+        System.out.println(response);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().toJson()).isEqualToIgnoringCase(expected);
     }
 
 
-    
-/*    @Test
-    public void givenEmployees_whenGetEmployees_thenReturnJsonArray() throws Exception {
+    @Test
+    public void shouldReturnNotFoundForId() throws Exception {
 
-        List<Article> allArticles = IntStream.rangeClosed(1, 4)
-        	    .boxed()
-        	    .flatMap(value -> 
-        	        IntStream.rangeClosed(1, 13)
-        	            .mapToObj(suit -> new Article(-1, "The Phoenix Project", "Management"))
-        	    )
-        	    .collect(Collectors.toList());
-        
-//        List<User> allArticles = users.stream().filter(u -> u.age > 30).collect(Collectors.toList());
-
-        
-     
-//		List<Article> results = repository.getAllArticles();
-//        List<Article> allArticles = Arrays.asList(alex);
-     
-//        Mockito.when(
-//				studentService.retrieveCourse(Mockito.anyString(),
-//						Mockito.anyString())).thenReturn(mockCourse);
-        
-        mockMvc.perform(get("/articles/list")
-          .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$", hasSize(1)))
-          .andExpect(jsonPath("$[0].name", is(alex.getName())));
-
-//		logger.debug(results.size() + ">>>" + results);
-//		logger.debug(tname.getMethodName() + " " + results);
-//
-//		logger.info(" returned results - \n {}", results);
-//
-//		Assert.assertTrue("returned no of rows is incorrect", (results.size() == 4));
-    	
-    	
-
-		
-    	
-    	
-
-    
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<Article> response =
+                restTemplate.exchange(createURLWithPort("/articles/show/100"),
+                        HttpMethod.GET,
+                        (new HttpEntity<String>(null, headers)), Article.class);
+        System.out.println(response);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isNull();
     }
-*/}
+
+    @Test
+    public void shouldReturnAllArticles() throws Exception{
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<Collection<Article>> response =
+                restTemplate.exchange(createURLWithPort("/articles/list"),
+                        HttpMethod.GET,
+                        (new HttpEntity<String>(null, headers)), new ParameterizedTypeReference<Collection<Article>>() {});
+        System.out.println(response);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().size()).isEqualTo(4);
+
+        response.getBody().forEach(a -> System.out.println(a.toJson()));
+    }
+
+
+    @Test
+    public void shouldAddArticleAndReturnId() {
+
+        Article article = new Article(-1, "The Phoenix Project", "Management");
+
+        HttpEntity<Article> entity = new HttpEntity<Article>(article, headers);
+
+        ResponseEntity<String> response =
+                restTemplate.exchange(createURLWithPort("/articles/add"),
+                        HttpMethod.POST, entity, String.class);
+
+        System.out.println(response);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        // assertThat(response.getBody()).is
+    }
+
+
+
+
+    // helper method to build uri
+    private String createURLWithPort(String uri) {
+        String url = "http://localhost:" + port + uri;
+        System.out.println(" url - " + url);
+        return url;
+    }
+
+}
