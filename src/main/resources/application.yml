@@ -21,6 +21,11 @@ spring:
     config:
       enabled: true
 
+# for `cloud` profile security is disabled for testing only
+security:
+  basic:
+    enabled: false
+
 
 #
 # 'default' profile settings
