@@ -144,6 +144,37 @@ public class ArticleRestControllerTests {
     }
 
 
+    @Test
+    public void shouldUpdateArticle() {
+        Article article = new Article(2, "Cloud Native Java", "Cloud Native");
+
+        HttpEntity<Article> entity = new HttpEntity<Article>(article, headers);
+
+        ResponseEntity<String> response =
+                restTemplate.exchange(createURLWithPort("/articles/update/2"),
+                        HttpMethod.PUT, entity, String.class);
+
+        System.out.println(response);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+
+        // verify delete worked by searching for it
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<Article> response2 =
+                restTemplate.exchange(createURLWithPort("/articles/show/2"),
+                        HttpMethod.GET,
+                        (new HttpEntity<String>(null, headers)), Article.class);
+        System.out.println(response2);
+        assertThat(response2).isNotNull();
+        assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response2.getBody()).isNotNull();
+        assertThat(response2.getBody().getCategory()).isEqualToIgnoringCase("Cloud Native");
+    }
+
+
+
+
     // helper method to build uri
     private String createURLWithPort(String uri) {
         String url = "http://localhost:" + port + uri;
