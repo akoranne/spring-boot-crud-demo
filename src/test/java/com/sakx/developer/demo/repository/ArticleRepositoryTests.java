@@ -40,28 +40,35 @@ public class ArticleRepositoryTests {
 
 	@Test
 	public void testAutowires() throws Exception {
+        logger.info("\n -----------------------------> test {} (+)", tname.getMethodName());
 		Assert.assertNotNull("... repository instance is null/empty", repository);
+        logger.info("\n -----------------------------> test {} (-)", tname.getMethodName());
 	}
 
 	@Test
 	public void testGetArticleById() throws Exception {
+        logger.info("\n -----------------------------> test {} (+)", tname.getMethodName());
 		int id = 1;
 		Article article = repository.getArticleById(id);
 		Assert.assertNotNull("... returned object is null/empty", article);
 		System.out.println(" returned article for id " + id + ", " + article);
+        logger.info("\n -----------------------------> test {} (-)", tname.getMethodName());
 	}
 
 	@Test
 	public void testGetAllArticles() {
+        logger.info("\n -----------------------------> test {} (+)", tname.getMethodName());
 		List<Article> results = repository.getAllArticles();
 		logger.debug(results.size() + ">>>" + results);
 		logger.debug(tname.getMethodName() + " " + results);
 		logger.info(" returned results - \n {}", results);
 		Assert.assertTrue("returned no of rows is incorrect", (results.size() == 4));
+        logger.info("\n -----------------------------> test {} (-)", tname.getMethodName());
 	}
 
 	@Test
 	public void testAddArticle() {
+        logger.info("\n -----------------------------> test {} (+)", tname.getMethodName());
 		int id1 = repository.addArticle(new Article(-1, "The Phoenix Project", "Management"));
 		int id2 = repository.addArticle(new Article(-1, "The JHipster Mini Book", "Frontend"));
 
@@ -72,11 +79,13 @@ public class ArticleRepositoryTests {
 		logger.debug(results.size() + ">>>" + results);
 		logger.debug(tname.getMethodName() + " " + results);
 		Assert.assertTrue("returned no of rows is incorrect", (results.size() == 6));
+        logger.info("\n -----------------------------> test {} (-)", tname.getMethodName());
 	}
 
 	@Test
 	public void testAddUpdateArticle() {
-		
+        logger.info("\n -----------------------------> test {} (+)", tname.getMethodName());
+
 		// add a new article
 		Article phoenixProject = new Article(-1, "The Phoenix Project", "Management");
 		Article jhipster = new Article(-1, "The JHipster Mini Book", "Frontend");
@@ -101,11 +110,13 @@ public class ArticleRepositoryTests {
 		Article article2 = repository.getArticleById(id1);
         assertThat(article2)
                 .isEqualToComparingFieldByField(jhipster);
-		
+
+        logger.info("\n -----------------------------> test {} (-)", tname.getMethodName());
 	}
 
     @Test
     public void testDeleteArticle() {
+        logger.info("\n -----------------------------> test {} (+)", tname.getMethodName());
 
         List<Article> results = repository.getAllArticles();
         Assert.assertTrue("returned no of rows is incorrect", (results.size() == 4));
@@ -123,11 +134,13 @@ public class ArticleRepositoryTests {
         assertThat(delCnt).isEqualTo(1);
 
         Article article2 = repository.getArticleById(id1);
-        assertThat(article2).isNotNull();
+        assertThat(article2).isNull();
 
         results = repository.getAllArticles();
         Assert.assertTrue("returned no of rows is incorrect", (results.size() == 3));
         logger.debug(results.size() + ">>>" + results);
         logger.info(" returned results - \n {}", results);
+
+        logger.info("\n -----------------------------> test {} (-)", tname.getMethodName());
     }
 }
