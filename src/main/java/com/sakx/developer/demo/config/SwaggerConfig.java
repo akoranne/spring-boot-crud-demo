@@ -32,7 +32,7 @@ public class SwaggerConfig {
 				.title("spring-boot-crud-demo")
 				.description("Spring Boot JDBC CRUD Example")
 				.termsOfServiceUrl("http://localhost:8080/")
-				.contact("akoranne")
+				.contact(new Contact("Ajay S. Koranne", "", "akoranne"))
 				.version("1.0")
 				.build();
 	}
