@@ -2,7 +2,9 @@ package com.sakx.developer.demo.controller;
 
 import com.sakx.developer.demo.Application;
 import com.sakx.developer.demo.model.Article;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,22 +40,25 @@ public class ArticleRestControllerTests {
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Rule
+    public TestName tname = new TestName();
 
-	@Autowired
+    @Autowired
     private TestRestTemplate restTemplate;
 
     private HttpHeaders headers = new HttpHeaders();
 
     @Test
     public void shouldReturnDefaultMessage() throws Exception {
+        logger.info("\n -----------------------------> test (+) {}", tname.getMethodName());
         assertThat(restTemplate.getForObject(createURLWithPort("/"), String.class))
                 .contains("Article service");
+        logger.info("\n -----------------------------> test (-) {}", tname.getMethodName());
     }
 
     @Test
     public void shouldReturnArticleForId() throws Exception {
+        logger.info("\n -----------------------------> test (+) {}", tname.getMethodName());
         String expected = "{\"articleId\":1,\"title\":\"Spring REST Security using Hibernate\",\"category\":\"Spring\"}";
 
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -66,12 +71,13 @@ public class ArticleRestControllerTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().toJson()).isEqualToIgnoringCase(expected);
+        logger.info("\n -----------------------------> test (-) {}", tname.getMethodName());
     }
 
 
     @Test
     public void shouldReturnNotFoundForId() throws Exception {
-
+        logger.info("\n -----------------------------> test (+) {}", tname.getMethodName());
         headers.setContentType(MediaType.APPLICATION_JSON);
         ResponseEntity<Article> response =
                 restTemplate.exchange(createURLWithPort("/articles/show/100"),
@@ -81,11 +87,12 @@ public class ArticleRestControllerTests {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNull();
+        logger.info("\n -----------------------------> test (-) {}", tname.getMethodName());
     }
 
     @Test
-    public void shouldReturnAllArticles() throws Exception{
-
+    public void shouldReturnAllArticles() throws Exception {
+        logger.info("\n -----------------------------> test (+) {}", tname.getMethodName());
         headers.setContentType(MediaType.APPLICATION_JSON);
         ResponseEntity<Collection<Article>> response =
                 restTemplate.exchange(createURLWithPort("/articles/list"),
@@ -98,11 +105,13 @@ public class ArticleRestControllerTests {
         assertThat(response.getBody().size()).isEqualTo(4);
 
         response.getBody().forEach(a -> System.out.println(a.toJson()));
+        logger.info("\n -----------------------------> test (-) {}", tname.getMethodName());
     }
 
 
     @Test
     public void shouldAddArticleAndReturnId() {
+        logger.info("\n -----------------------------> test (+) {}", tname.getMethodName());
 
         Article article = new Article(-1, "The Phoenix Project", "Management");
 
@@ -116,36 +125,13 @@ public class ArticleRestControllerTests {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        // assertThat(response.getBody()).is
+        logger.info("\n -----------------------------> test (-) {}", tname.getMethodName());
     }
-
-    @Test
-    public void shouldDeleteArticle() {
-        // delete
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<String> response1 =
-                restTemplate.exchange(createURLWithPort("/articles/delete/3"),
-                        HttpMethod.DELETE,
-                        (new HttpEntity<String>(null, headers)), String.class);
-        System.out.println(response1);
-        assertThat(response1).isNotNull();
-        assertThat(response1.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        // verify delete worked by searching for it
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Article> response2 =
-                restTemplate.exchange(createURLWithPort("/articles/show/3"),
-                        HttpMethod.GET,
-                        (new HttpEntity<String>(null, headers)), Article.class);
-        System.out.println(response2);
-        assertThat(response2).isNotNull();
-        assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response2.getBody()).isNull();
-    }
-
 
     @Test
     public void shouldUpdateArticle() {
+        logger.info("\n -----------------------------> test (+) {}", tname.getMethodName());
+
         Article article = new Article(2, "Cloud Native Java", "Cloud Native");
 
         HttpEntity<Article> entity = new HttpEntity<Article>(article, headers);
@@ -170,10 +156,37 @@ public class ArticleRestControllerTests {
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response2.getBody()).isNotNull();
         assertThat(response2.getBody().getCategory()).isEqualToIgnoringCase("Cloud Native");
+
+        logger.info("\n -----------------------------> test (-) {}", tname.getMethodName());
     }
 
+    @Test
+    public void shouldDeleteArticle() {
+        logger.info("\n -----------------------------> test (+) {}", tname.getMethodName());
 
+        // delete
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<String> response1 =
+                restTemplate.exchange(createURLWithPort("/articles/delete/3"),
+                        HttpMethod.DELETE,
+                        (new HttpEntity<String>(null, headers)), String.class);
+        System.out.println(response1);
+        assertThat(response1).isNotNull();
+        assertThat(response1.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        // verify delete worked by searching for it
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<Article> response2 =
+                restTemplate.exchange(createURLWithPort("/articles/show/3"),
+                        HttpMethod.GET,
+                        (new HttpEntity<String>(null, headers)), Article.class);
+        System.out.println(response2);
+        assertThat(response2).isNotNull();
+        assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response2.getBody()).isNull();
+
+        logger.info("\n -----------------------------> test (-) {}", tname.getMethodName());
+    }
 
     // helper method to build uri
     private String createURLWithPort(String uri) {
