@@ -13,7 +13,6 @@ import com.sakx.developer.demo.model.Article;
 
 public class RestClientUtil {
 
-/*
     public void getArticleByIdDemo() {
     	HttpHeaders headers = new HttpHeaders();
     	headers.setContentType(MediaType.APPLICATION_JSON);
@@ -50,7 +49,7 @@ public class RestClientUtil {
         URI uri = restTemplate.postForLocation(url, requestEntity);
         System.out.println(uri.getPath());    	
     }
-*/
+
     public void updateArticleDemo() {
     	HttpHeaders headers = new HttpHeaders();
     	headers.setContentType(MediaType.APPLICATION_JSON);
@@ -71,6 +70,7 @@ public class RestClientUtil {
         HttpEntity<Article> requestEntity = new HttpEntity<Article>(headers);
         restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Void.class, 1);        
     }
+
     public static void main(String args[]) {
     	RestClientUtil util = new RestClientUtil();
         //util.getArticleByIdDemo();
