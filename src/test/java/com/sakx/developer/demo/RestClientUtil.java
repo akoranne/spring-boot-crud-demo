@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import com.sakx.developer.demo.model.Article;
 
 public class RestClientUtil {
+
+/*
     public void getArticleByIdDemo() {
     	HttpHeaders headers = new HttpHeaders();
     	headers.setContentType(MediaType.APPLICATION_JSON);
@@ -48,6 +50,7 @@ public class RestClientUtil {
         URI uri = restTemplate.postForLocation(url, requestEntity);
         System.out.println(uri.getPath());    	
     }
+*/
     public void updateArticleDemo() {
     	HttpHeaders headers = new HttpHeaders();
     	headers.setContentType(MediaType.APPLICATION_JSON);
@@ -74,6 +77,6 @@ public class RestClientUtil {
     	//util.addArticleDemo();
     	//util.updateArticleDemo();
     	//util.deleteArticleDemo();
-    	util.getAllArticlesDemo();    	
+    	// util.getAllArticlesDemo();
     }    
 }

@@ -18,6 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
 import java.util.List;
@@ -118,7 +119,29 @@ public class ArticleRestControllerTests {
         // assertThat(response.getBody()).is
     }
 
+    @Test
+    public void shouldDeleteArticle() {
+        // delete
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<String> response1 =
+                restTemplate.exchange(createURLWithPort("/articles/delete/3"),
+                        HttpMethod.DELETE,
+                        (new HttpEntity<String>(null, headers)), String.class);
+        System.out.println(response1);
+        assertThat(response1).isNotNull();
+        assertThat(response1.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        // verify delete worked by searching for it
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<Article> response2 =
+                restTemplate.exchange(createURLWithPort("/articles/show/3"),
+                        HttpMethod.GET,
+                        (new HttpEntity<String>(null, headers)), Article.class);
+        System.out.println(response2);
+        assertThat(response2).isNotNull();
+        assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response2.getBody()).isNull();
+    }
 
 
     // helper method to build uri
