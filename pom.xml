@@ -97,9 +97,9 @@
 		</dependency>
 -->
 		<dependency>
-			<groupId>io.springfox.ui</groupId>
-			<artifactId>springfox-swagger-ui-rfc6570</artifactId>
-			<version>1.0.0</version>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.version}</version>
 		</dependency>
 
 		<!-- test -->
