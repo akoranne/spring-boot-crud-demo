@@ -46,7 +46,6 @@ dependencies {
 	compile "org.springframework.boot:spring-boot-starter-data-rest"
 	compile "org.springframework.boot:spring-boot-starter-data-jpa"
 	compile "org.springframework.boot:spring-boot-starter-security"
-	compile "org.springframework.boot:spring-boot-devtools"
 
 	compile "com.google.code.gson:gson:2.8.1"
 
@@ -61,6 +60,8 @@ dependencies {
 
 	// use locally
     runtime "com.h2database:h2"
+
+	runtime "org.springframework.boot:spring-boot-devtools"
 
 	// test
     testCompile "org.springframework.boot:spring-boot-starter-test"
@@ -79,9 +80,8 @@ dependencyManagement {
 }
 
 repositories {
-	maven {
-		// url "http://repo.maven.apache.org/maven2,
-		url "https://repo.spring.io/milestone"
-	}
+	maven { url "https://repo.spring.io/milestone" }
+	maven { url "http://repo.maven.apache.org/maven2" }
+	maven { url "https://repo.spring.io/milestone" }
 }
 
