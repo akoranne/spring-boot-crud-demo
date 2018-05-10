@@ -34,5 +34,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 						"/swagger-resources/configuration/ui",
 						"/swagger-resources/configuration/security")
 				.permitAll();
+		http.csrf().disable();
 	}
 }

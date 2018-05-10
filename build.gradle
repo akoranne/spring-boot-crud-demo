@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.12.RELEASE' // Latest GA Spring Boot version at time of writing.
+		springBootVersion = '1.5.13.RELEASE' // Latest GA Spring Boot version at time of writing.
 	}
 	repositories {
 		mavenCentral()
