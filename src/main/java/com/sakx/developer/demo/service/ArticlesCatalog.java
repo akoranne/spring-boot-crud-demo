@@ -8,8 +8,13 @@ import org.springframework.stereotype.Service;
 import com.sakx.developer.demo.model.Article;
 import com.sakx.developer.demo.repository.ArticleRepository;
 
+
+/**
+ * This classes contains the service catalog for articles
+ */
+
 @Service
-public class ArticleService {
+public class ArticlesCatalog {
 
 	@Autowired
 	private ArticleRepository articleRepository;

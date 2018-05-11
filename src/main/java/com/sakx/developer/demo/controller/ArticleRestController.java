@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.sakx.developer.demo.model.Article;
-import com.sakx.developer.demo.service.ArticleService;
+import com.sakx.developer.demo.service.ArticlesCatalog;
 
 @Controller
 @RequestMapping("/")
@@ -24,7 +23,7 @@ public class ArticleRestController {
 	public static final Logger logger = LoggerFactory.getLogger(ArticleRestController.class);
 	
 	@Autowired
-	private ArticleService articleService;
+	private ArticlesCatalog articleService;
 
     @RequestMapping("/")
     public ResponseEntity<String> greeting() {

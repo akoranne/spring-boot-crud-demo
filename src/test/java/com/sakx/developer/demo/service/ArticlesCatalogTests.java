@@ -21,9 +21,9 @@ import java.util.List;
 @SpringBootTest(classes = Application.class, webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:Before-Test-Schema.sql")
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:Before-Test-Data.sql")
-public class ArticleServiceTests {
+public class ArticlesCatalogTests {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArticleServiceTests.class);
+    private static final Logger logger = LoggerFactory.getLogger(ArticlesCatalogTests.class);
 
     @LocalServerPort
     private int port;
@@ -32,7 +32,7 @@ public class ArticleServiceTests {
     public TestName tname = new TestName();
 
     @Autowired
-    private ArticleService service;
+    private ArticlesCatalog service;
 
     @Test
     public void testAutowires() throws Exception {
