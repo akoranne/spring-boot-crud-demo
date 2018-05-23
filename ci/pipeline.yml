@@ -12,16 +12,20 @@ resources:
   source:
     uri: {{git-url}}
     branch: {{git-branch}}
+    username: ((git-username))
+    # please uncomment as applicable
+#    password: ((git-passwd))
+#    private_key: ((git-private-key))
 
 - name: deploy-dev
   type: cf
   source:
     api:             {{pws-api}}
-    username:        {{deploy-username}}
-    password:        {{deploy-password}}
+    username:        ((deploy-username))
+    password:        ((deploy-password))
     skip_cert_check: true
     organization:    {{pws-organization}}
-    space:           {{pws-staging-space}}
+    space:           {{pws-space}}
 
 jobs:
 - name: build

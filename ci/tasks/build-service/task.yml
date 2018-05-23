@@ -18,4 +18,4 @@ params:
   GRADLE_OPTS: -Dorg.gradle.native=false
 
 run:
-  path: service-repo/ci/tasks/build_service/task.sh
+  path: service-repo/ci/tasks/build-service/task.sh
