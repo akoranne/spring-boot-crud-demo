@@ -72,6 +72,21 @@ public class ArticleRepository {
 		}, rowMapper);
 		return articles;
 	}
+	
+	public List<Article> getArticleByCategory(String articleCategory) {
+		String sql = "SELECT article_id, title, category FROM articles WHERE category = ?";
+		RowMapper<Article> rowMapper = new BeanPropertyRowMapper<Article>(Article.class);
+		List<Article> articles = jdbcTemplate.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(sql);
+				int idx = 0;
+				ps.setString(++idx, articleCategory);
+				return ps;
+			}
+		}, rowMapper);
+		return (articles != null && articles.isEmpty() == false ? articles : null);
+	}
 
 
     //Add article
