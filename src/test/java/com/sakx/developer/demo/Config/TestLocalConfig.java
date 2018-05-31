@@ -5,5 +5,5 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("default")
-public class LocalConfig {
+public class TestLocalConfig {
 }

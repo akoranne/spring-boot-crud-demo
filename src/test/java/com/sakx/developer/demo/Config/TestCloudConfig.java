@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("cloud")
-public class CloudConfig {
+public class TestCloudConfig {
 
     /**
      * Add beans for running tests only in the `cloud` profile.
