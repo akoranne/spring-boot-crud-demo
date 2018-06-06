@@ -1,13 +1,13 @@
 buildscript {
-	ext {
-		springBootVersion = '1.5.13.RELEASE' // Latest GA Spring Boot version at time of writing.
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '1.5.13.RELEASE' // Latest GA Spring Boot version at time of writing.
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'java'
@@ -15,73 +15,85 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 jar {
-	group = 'com.sakx.developer'
-	baseName = 'spring-boot-crud-demo'
-	version = '0.0.1-SNAPSHOT'
-	description = "spring boot crud demo"
+    group = 'com.sakx.developer'
+    baseName = 'spring-boot-crud-demo'
+    version = '0.0.1-SNAPSHOT'
+    description = "spring boot crud demo"
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 ext {
-	springCloudVersion = 'Edgware.SR3'
-	pivotalSpringCloudVersion = '1.6.3.RELEASE'
-	swaggerVersion = '2.8.0'
+    springCloudVersion = 'Edgware.SR3'
+    pivotalSpringCloudVersion = '1.6.3.RELEASE'
+    swaggerVersion = '2.8.0'
 }
 
 
 tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
+    options.encoding = 'UTF-8'
 }
+
+test {
+	reports {
+		junitXml.enabled = false
+		html.enabled = true
+	}
+}
+
 
 dependencies {
     // spring
     compile "org.springframework.boot:spring-boot-starter-web"
-	compile "org.springframework.boot:spring-boot-starter-actuator"
-	compile "org.springframework.boot:spring-boot-starter-data-rest"
-	compile "org.springframework.boot:spring-boot-starter-data-jpa"
-	compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-data-rest"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-security"
 
-	compile "com.google.code.gson:gson:2.8.1"
+    compile "com.google.code.gson:gson:2.8.1"
 
-	// swagger
-	compile "io.springfox:springfox-swagger2:2.8.0"
-	compile "io.springfox:springfox-swagger-ui:2.8.0"
+    // swagger
+    compile "io.springfox:springfox-swagger2:2.8.0"
+    compile "io.springfox:springfox-swagger-ui:2.8.0"
 
-	compileOnly "org.projectlombok:lombok"
+    compile "io.github.swagger2markup:swagger2markup:1.3.3"
 
-	// use on cloud
+
+    compileOnly "org.projectlombok:lombok"
+
+    // use on cloud
     runtime "mysql:mysql-connector-java:5.1.43"
 
-	// use locally
+    // use locally
     runtime "com.h2database:h2"
 
-	runtime "org.springframework.boot:spring-boot-devtools"
+    runtime "org.springframework.boot:spring-boot-devtools"
 
-	// test
+    // test
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "org.assertj:assertj-core:2.6.0"
-	testCompile "com.jayway.jsonpath:json-path:2.2.0"
+    testCompile "com.jayway.jsonpath:json-path:2.2.0"
     testCompile "com.jayway.restassured:rest-assured:2.9.0"
 }
 
 dependencyManagement {
-	imports {
-		// Sets the versions of Spring Cloud components
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-		// this is critical, set version for pivotal's scs components
-		mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:${pivotalSpringCloudVersion}"
-	}
+    imports {
+        // Sets the versions of Spring Cloud components
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        // this is critical, set version for pivotal's scs components
+        mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:${pivotalSpringCloudVersion}"
+    }
 }
 
 repositories {
-	maven { url "https://repo.spring.io/milestone" }
-	maven { url "http://repo.maven.apache.org/maven2" }
-	maven { url "https://repo.spring.io/milestone" }
+    jCenter()
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "https://repo.spring.io/milestone" }
 }
 
