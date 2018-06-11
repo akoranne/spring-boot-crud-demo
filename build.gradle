@@ -61,9 +61,6 @@ dependencies {
     compile "io.springfox:springfox-swagger2:2.8.0"
     compile "io.springfox:springfox-swagger-ui:2.8.0"
 
-    compile "io.github.swagger2markup:swagger2markup:1.3.3"
-
-
     compileOnly "org.projectlombok:lombok"
 
     // use on cloud
@@ -91,7 +88,6 @@ dependencyManagement {
 }
 
 repositories {
-    jCenter()
     maven { url "https://repo.spring.io/milestone" }
     maven { url "http://repo.maven.apache.org/maven2" }
     maven { url "https://repo.spring.io/milestone" }
