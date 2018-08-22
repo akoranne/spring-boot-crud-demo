@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.sakx.developer.demo.exception.ArticleAlreadyExistsException;
+import com.sakx.developer.demo.exception.ArticleNotFoundException;
+import com.sakx.developer.demo.exception.BadRequestException;
 import com.sakx.developer.demo.model.Article;
 import com.sakx.developer.demo.service.ArticlesCatalog;
 
@@ -21,24 +24,24 @@ import com.sakx.developer.demo.service.ArticlesCatalog;
 public class ArticleRestController {
 
 	public static final Logger logger = LoggerFactory.getLogger(ArticleRestController.class);
-	
+
 	@Autowired
 	private ArticlesCatalog articleService;
 
-    @RequestMapping("/")
-    public ResponseEntity<String> greeting() {
+	@RequestMapping("/")
+	public ResponseEntity<String> greeting() {
 		return new ResponseEntity<String>(articleService.getInfo(), HttpStatus.OK);
-    }
-	
-	@RequestMapping(value = "/articles/list", method= RequestMethod.GET)
+	}
+
+	@RequestMapping(value = "/articles/list", method = RequestMethod.GET)
 	public ResponseEntity<List<Article>> getAllArticles() {
 		List<Article> list = articleService.getAllArticles();
 		logger.debug(" getting list of all articles - {} ", (list != null ? list.size() : null));
 		return new ResponseEntity<List<Article>>(list, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/articles/show/{id}", method= RequestMethod.GET)
-	public ResponseEntity<Article> getArticleById(@PathVariable("id") Integer id) {
+	@RequestMapping(value = "/articles/show/{id}", method = RequestMethod.GET)
+	public ResponseEntity<Article> getArticleById(@PathVariable("id") Integer id) throws ArticleNotFoundException {
 		HttpStatus status = HttpStatus.OK;
 
 		logger.debug(" searching for article - {} ", id);
@@ -51,22 +54,12 @@ public class ArticleRestController {
 	}
 
 	@RequestMapping(value = "/articles/add", method = RequestMethod.POST)
-	public ResponseEntity<String> addArticle(@RequestBody Article article) {
-	// public ResponseEntity<String> addArticle(@RequestBody Article article, UriComponentsBuilder builder) {
-
+	public ResponseEntity<String> addArticle(@RequestBody Article article) throws ArticleAlreadyExistsException {
+		// public ResponseEntity<String> addArticle(@RequestBody Article
+		// article, UriComponentsBuilder builder) {
 		ResponseEntity<String> response = null;
-
-		boolean isAdded = articleService.addArticle(article);
-		if (isAdded == false) {
-			response = new ResponseEntity<String>("Article already existed!", HttpStatus.CONFLICT);
-		} else {
-			response = new ResponseEntity<String>("Article added successfully", HttpStatus.OK);
-//			if (forward) {
-//				HttpHeaders headers = new HttpHeaders();
-//				headers.setLocation(builder.path("/show/{id}").buildAndExpand(article.getArticleId()).toUri());
-//				response = new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-//			}
-		}
+		articleService.addArticle(article);
+		response = new ResponseEntity<String>("Article added successfully", HttpStatus.OK);
 		return response;
 	}
 
@@ -77,11 +70,20 @@ public class ArticleRestController {
 		return new ResponseEntity<String>("Article updated successfully", HttpStatus.OK);
 	}
 
-
-	@RequestMapping(value="/articles/delete/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/articles/delete/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteArticle(@PathVariable("id") Integer id) {
 		articleService.deleteArticle(id);
 		return new ResponseEntity<String>("Article deleted successfully", HttpStatus.OK);
 	}
 
-} 
+	@RequestMapping(value = "/articles/searchByCategory/{category}", method = RequestMethod.GET)
+	public ResponseEntity<List<Article>> getArticleByCategory(@PathVariable("category") String category)
+			throws BadRequestException, ArticleNotFoundException {
+		HttpStatus status = HttpStatus.OK;
+		logger.debug(" searching for article - {} ", category);
+		List<Article> articles = articleService.getArticleByCategory(category);
+		logger.debug(" articles are {} ", articles);
+		return new ResponseEntity<List<Article>>(articles, status);
+	}
+
+}
