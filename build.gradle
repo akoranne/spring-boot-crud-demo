@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.13.RELEASE' // Latest GA Spring Boot version at time of writing.
+        springBootVersion = '2.1.8.RELEASE' // Latest GA Spring Boot version at time of writing.
     }
     repositories {
         mavenCentral()
@@ -29,9 +29,9 @@ repositories {
 }
 
 ext {
-    springCloudVersion = 'Edgware.SR3'
-    pivotalSpringCloudVersion = '1.6.3.RELEASE'
-    swaggerVersion = '2.8.0'
+    springCloudVersion = 'Greenwich.SR3'
+    pivotalSpringCloudVersion = '2.1.4.RELEASE'
+    swaggerVersion = '2.9.2'
 }
 
 
