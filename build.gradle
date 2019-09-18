@@ -1,37 +1,34 @@
-buildscript {
-    ext {
-        springBootVersion = '2.1.8.RELEASE' // Latest GA Spring Boot version at time of writing.
-    }
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+plugins {
+    id 'org.springframework.boot' version '2.1.8.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+}
+
+group = 'com.sakx.developer'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+// override bootRun target, to accept command line arguments.
+bootRun {
+    if ( project.hasProperty('jvmArgs') ) {
+        jvmArgs project.jvmArgs.split('\\s+')
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-
-jar {
-    group = 'com.sakx.developer'
-    baseName = 'spring-boot-crud-demo'
-    version = '0.0.1-SNAPSHOT'
-    description = "spring boot crud demo"
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
 ext {
-    springCloudVersion = 'Greenwich.SR3'
-    pivotalSpringCloudVersion = '2.1.4.RELEASE'
-    swaggerVersion = '2.9.2'
+    set('springCloudServicesVersion', "2.1.4.RELEASE")
+    set('springCloudVersion', "Greenwich.SR3")
+    set('swaggerVersion', '2.9.2')
 }
 
 
@@ -80,16 +77,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        // Sets the versions of Spring Cloud components
+        mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:${springCloudServicesVersion}"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        // this is critical, set version for pivotal's scs components
-        mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:${pivotalSpringCloudVersion}"
     }
 }
-
-repositories {
-    maven { url "https://repo.spring.io/milestone" }
-    maven { url "http://repo.maven.apache.org/maven2" }
-    maven { url "https://repo.spring.io/milestone" }
-}
-
