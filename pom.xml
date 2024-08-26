@@ -24,7 +24,7 @@
 		<java.version>1.8</java.version>
 		<spring.cloud.version>Edgware.SR3</spring.cloud.version>
 		<pivotal.spring.cloud.version>1.6.3.RELEASE</pivotal.spring.cloud.version>
-		<swagger.version>2.8.0</swagger.version>
+		<swagger.version>2.10.0</swagger.version>
 	</properties>
 
 	<dependencies>
